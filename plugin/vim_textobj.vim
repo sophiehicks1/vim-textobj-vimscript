@@ -156,7 +156,7 @@ function! TextobjVimBlocksSelectA(...) abort
   if empty(b)
     return 0
   endif
-  return ['V', [b[0], b[1]], [b[2], b[3]]]
+  return ['V', [0, b[0], b[1], 0], [0, b[2], b[3], 0]]
 endfunction
 
 function! TextobjVimBlocksSelectI(...) abort
@@ -167,9 +167,9 @@ function! TextobjVimBlocksSelectI(...) abort
   let s_l = b[0]
   let e_l = b[2]
   if e_l - s_l <= 1
-    return ['V', [b[0], b[1]], [b[2], b[3]]]
+    return ['V', [0, b[0], b[1], 0], [0, b[2], b[3], 0]]
   endif
-  return ['V', [s_l + 1, 1], [e_l - 1, strlen(getline(e_l - 1)) + 1]]
+  return ['V', [0, s_l + 1, 1, 0], [0, e_l - 1, strlen(getline(e_l - 1)) + 1, 0]]
 endfunction
 
 " Public selectors for function blocks (key: f)
@@ -178,7 +178,7 @@ function! TextobjVimFuncSelectA(...) abort
   if empty(b)
     return 0
   endif
-  return ['V', [b[0], b[1]], [b[2], b[3]]]
+  return ['V', [0, b[0], b[1], 0], [0, b[2], b[3], 0]]
 endfunction
 
 function! TextobjVimFuncSelectI(...) abort
@@ -189,41 +189,39 @@ function! TextobjVimFuncSelectI(...) abort
   let s_l = b[0]
   let e_l = b[2]
   if e_l - s_l <= 1
-    return ['V', [b[0], b[1]], [b[2], b[3]]]
+    return ['V', [0, b[0], b[1], 0], [0, b[2], b[3], 0]]
   endif
-  return ['V', [s_l + 1, 1], [e_l - 1, strlen(getline(e_l - 1)) + 1]]
+  return ['V', [0, s_l + 1, 1, 0], [0, e_l - 1, strlen(getline(e_l - 1)) + 1, 0]]
 endfunction
 
 " Register with vim-textobj-user:
-" - 'v' = non-function blocks => ac/ic
+" - 'c' = non-function blocks => ac/ic
 " - 'f' = functions          => af/if
-if exists('*textobj#user#plugin')
-  call textobj#user#plugin('vimscriptblock', {
-  \ 'c': {
-  \   'select-a-function': 'TextobjVimBlocksSelectA',
-  \   'select-i-function': 'TextobjVimBlocksSelectI',
-  \   'select-a': [],
-  \   'select-i': [],
-  \ },
-  \ 'f': {
-  \   'select-a-function': 'TextobjVimFuncSelectA',
-  \   'select-i-function': 'TextobjVimFuncSelectI',
-  \   'select-a': [],
-  \   'select-i': [],
-  \ },
-  \ })
-endif
+call textobj#user#plugin('vimscriptblock', {
+\ 'c': {
+\   'select-a-function': 'TextobjVimBlocksSelectA',
+\   'select-a': 'ac',
+\   'select-i-function': 'TextobjVimBlocksSelectI',
+\   'select-i': 'ic',
+\ },
+\ 'f': {
+\   'select-a-function': 'TextobjVimFuncSelectA',
+\   'select-a': 'af',
+\   'select-i-function': 'TextobjVimFuncSelectI',
+\   'select-i': 'if',
+\ },
+\ })
 
 augroup vim_textobjs
   autocmd!
   autocmd FileType vim call textobj#user#map('vimscriptblock', {
         \ 'c': {
-        \   'select-a': 'ac',
-        \   'select-i': 'ic',
+        \   'select-a': '<buffer> ac',
+        \   'select-i': '<buffer> ic',
         \ },
         \ 'f': {
-        \   'select-a': 'af',
-        \   'select-i': 'if',
+        \   'select-a': '<buffer> af',
+        \   'select-i': '<buffer> if',
         \ },
         \ })
 augroup END
