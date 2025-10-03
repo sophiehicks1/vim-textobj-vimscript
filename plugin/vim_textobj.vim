@@ -194,21 +194,18 @@ function! TextobjVimFuncSelectI(...) abort
   return ['V', [0, s_l + 1, 1, 0], [0, e_l - 1, strlen(getline(e_l - 1)) + 1, 0]]
 endfunction
 
-" Register with vim-textobj-user:
-" - 'c' = non-function blocks => ac/ic
-" - 'f' = functions          => af/if
 call textobj#user#plugin('vimscriptblock', {
 \ 'c': {
 \   'select-a-function': 'TextobjVimBlocksSelectA',
-\   'select-a': 'ac',
 \   'select-i-function': 'TextobjVimBlocksSelectI',
-\   'select-i': 'ic',
+\   'select-a': [],
+\   'select-i': [],
 \ },
 \ 'f': {
 \   'select-a-function': 'TextobjVimFuncSelectA',
-\   'select-a': 'af',
 \   'select-i-function': 'TextobjVimFuncSelectI',
-\   'select-i': 'if',
+\   'select-a': [],
+\   'select-i': [],
 \ },
 \ })
 
